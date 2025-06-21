@@ -10,12 +10,12 @@ namespace Character
         [SerializeField] private Rigidbody _object;
         [SerializeField] private Transform _orientation;
         
-        [Header("Edit Data")]
+        [Space, Header("Edit Data")]
         [SerializeField] private float _moveSpeed;
         [SerializeField] private float _lookSpeed;
         [SerializeField] private float _jumpForce;
         
-        [Header("Runtime Data")]
+        [Space, Header("Runtime Data")]
         [SerializeField] private CharacterRuntimeData _characterRuntimeData;
         
         private Vector3 _lastMoveInput;

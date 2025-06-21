@@ -3,6 +3,14 @@
     <ui:VisualElement name="Root" style="flex-grow: 1;">
         <ui:VisualElement name="Panel" class="panel" style="background-color: rgba(0, 0, 0, 0.59); width: 250px; height: 75px; align-self: flex-end; right: 85px; top: 50px; left: auto; bottom: auto;">
             <ui:VisualElement style="flex-direction: row; left: 0;">
+                <ui:Label text="Health:" name="HealthStaticText" style="color: rgb(255, 255, 255); left: 5px;" />
+                <ui:Label text="Label" name="HealthDynamicText" data-source="project://database/Assets/ScriptableObjects/RuntimeData/CharacterRuntimeData.asset?fileID=11400000&amp;guid=392beaf2b9b484ddebc6b20355886100&amp;type=2#CharacterRuntimeData" data-source-path="Health" style="color: rgb(255, 255, 255);">
+                    <Bindings>
+                        <ui:DataBinding property="text" data-source-path="Health" data-source="project://database/Assets/ScriptableObjects/RuntimeData/CharacterRuntimeData.asset?fileID=11400000&amp;guid=392beaf2b9b484ddebc6b20355886100&amp;type=2#CharacterRuntimeData" binding-mode="ToTarget" />
+                    </Bindings>
+                </ui:Label>
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row; left: 0;">
                 <ui:Label text="Linear Velocity:" name="VelocityStaticText" style="color: rgb(255, 255, 255); left: 5px;" />
                 <ui:Label text="Label" name="VelocityDynamicText" data-source="project://database/Assets/ScriptableObjects/RuntimeData/CharacterRuntimeData.asset?fileID=11400000&amp;guid=392beaf2b9b484ddebc6b20355886100&amp;type=2#CharacterRuntimeData" data-source-path="LinearVelocity" style="color: rgb(255, 255, 255);">
                     <Bindings>
@@ -10,7 +18,6 @@
                     </Bindings>
                 </ui:Label>
             </ui:VisualElement>
-            <ui:VisualElement style="flex-grow: 1;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
