@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.cs.toolbox": {
+      "version": "https://github.com/csahincs/UnityToolbox.git?path=Assets/CSToolbox",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.modules.uielements": "1.0.0"
+      },
+      "hash": "7eccce4a011bdae1de4f0e89d83db3761807fddc"
+    },
     "com.cysharp.unitask": {
       "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
       "depth": 0,
@@ -63,7 +72,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.31",
+      "version": "3.0.36",
       "depth": 0,
       "source": "registry",
       "dependencies": {

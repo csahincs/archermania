@@ -1,5 +1,6 @@
 using Data;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 namespace Character
@@ -17,6 +18,9 @@ namespace Character
         
         [Space, Header("Runtime Data")]
         [SerializeField] private CharacterRuntimeData _characterRuntimeData;
+        
+        [Space, Header("Events")]
+        [SerializeField] private UnityEvent _onJump;
         
         private Vector3 _lastMoveInput;
         
@@ -45,6 +49,7 @@ namespace Character
             if (IsOnGround())
             {
                 _object.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+                _onJump.Invoke();
             }
         }
 

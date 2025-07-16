@@ -1,29 +1,46 @@
+using System;
+using Projectile;
 using UnityEngine;
-using Utility.UniTaskExtension;
+using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 namespace Character
 {
     public class CharacterAttack : MonoBehaviour
     {
-        [SerializeField] private Rigidbody _projectilePrefab;
-        [SerializeField] private float _projectileSpeed;
-        [SerializeField] private float _cooldown;
-
-        private bool _inCooldown;
+        [SerializeField] private Arrow _projectilePrefab;
         
-        public void Attack()
+        [Space, Header("Events")]
+        [SerializeField] private UnityEvent _onAttack;
+        
+        private bool _isCharging;
+        private float _chargeDuration;
+        
+        public void Attack(InputAction.CallbackContext context)
         {
-            if (_inCooldown)
-                return;
-            
-            _inCooldown = true;
-            
-            var spawnPosition = transform.position + transform.forward.normalized;
-            var projectile = Instantiate(_projectilePrefab, spawnPosition, 
-                Quaternion.Euler(transform.forward));
-            projectile.AddForce(_projectileSpeed * transform.forward, ForceMode.Impulse);
-            
-            UniTaskHelper.WaitAndDo(_cooldown, () => { _inCooldown = false; }, destroyCancellationToken).Forget();
+            Debug.LogError(context.phase);
+            switch (context.phase)
+            {
+                case InputActionPhase.Started:
+                    _chargeDuration = 0f;
+                    _isCharging = true;
+                    break;
+                case InputActionPhase.Canceled:
+                    var spawnPosition = transform.position + transform.forward.normalized;
+                    var projectile = Instantiate(_projectilePrefab, spawnPosition, Quaternion.Euler(transform.forward));
+                    projectile.Initialize(transform.forward, _chargeDuration);
+                    _isCharging = false;
+                    _onAttack.Invoke();
+                    break;
+            }
+        }
+
+        private void Update()
+        {
+            if (_isCharging)
+            {
+                _chargeDuration += Time.deltaTime;
+            }
         }
     }
 }
