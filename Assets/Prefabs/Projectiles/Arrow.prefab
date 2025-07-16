@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 2524899325400065741}
-  _maxSpeed: 20
+  _maxSpeed: 100
   _damage: 10
   _maxChargeDuration: 5
 --- !u!33 &5366108175572080869
