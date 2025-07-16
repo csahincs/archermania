@@ -1,3 +1,4 @@
+using CSToolbox.Runtime.Attributes;
 using UnityEngine;
 
 namespace Data
@@ -6,14 +7,14 @@ namespace Data
     public class CharacterRuntimeData : ScriptableObject
     {
         [Header("Health Data")]
-        public float Health;
+        [field: SerializeField, ReadOnly] public float Health { get; set; }
         
         [Header("Movement Data")]
-        public Vector3 LinearVelocity;
-        public Vector3 AngularVelocity;
+        [field: SerializeField, ReadOnly] public Vector3 LinearVelocity { get; set; }
+        [field: SerializeField, ReadOnly] public Vector3 AngularVelocity { get; set; }
 
         [Header("Debug Data")] 
-        public bool LogMoveInput;
-        public bool LogLookInput;
+        [field: SerializeField] public bool LogMoveInput { get; set; }
+        [field: SerializeField] public bool LogLookInput { get; set; }
     }
 }

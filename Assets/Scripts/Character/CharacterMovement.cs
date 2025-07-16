@@ -1,74 +1,84 @@
 using Data;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using Utility.Lerp;
 
 namespace Character
 {
     public class CharacterMovement : MonoBehaviour
     {
         [Header("References")] 
-        [SerializeField] private Rigidbody _object;
-        [SerializeField] private Transform _orientation;
+        [SerializeField] private Rigidbody _characterRigidbody;
+        [SerializeField] private Transform _cameraTargetTransform;
         
         [Space, Header("Edit Data")]
         [SerializeField] private float _moveSpeed;
-        [SerializeField] private float _lookSpeed;
         [SerializeField] private float _jumpForce;
+        [SerializeField] private float _cameraTurnSpeed;
+        [SerializeField] private float _characterTurnSpeed;
         
         [Space, Header("Runtime Data")]
         [SerializeField] private CharacterRuntimeData _characterRuntimeData;
-        
-        [Space, Header("Events")]
-        [SerializeField] private UnityEvent _onJump;
-        
-        private Vector3 _lastMoveInput;
-        
-        private Vector2 _currentLookInput;
-        private Vector2 _previousLookInput;
 
+        private Vector2 _moveInput;
+        private Vector2 _rotationInput;
+
+        private void Update()
+        {
+            _cameraTargetTransform.Rotate(Vector3.up, _rotationInput.x * _cameraTurnSpeed * Time.deltaTime);
+            
+            var targetVelocity = _cameraTargetTransform.forward * _moveInput.y + _cameraTargetTransform.right * _moveInput.x;
+            var velocityLerpValue = ExponentialDecay.Evaluate(_characterRigidbody.linearVelocity, 
+                targetVelocity, _moveSpeed, Time.deltaTime);
+
+            if (!_characterRigidbody.linearVelocity.Equals(velocityLerpValue))
+            {
+                var rotationLerpValue = ExponentialDecay.Evaluate(_characterRigidbody.transform.rotation.eulerAngles, 
+                    _cameraTargetTransform.rotation.eulerAngles, _characterTurnSpeed, Time.deltaTime);
+                
+                _characterRigidbody.transform.forward = rotationLerpValue;
+                _characterRigidbody.linearVelocity = velocityLerpValue;
+            }
+            
+            // Debug purposes
+            _characterRuntimeData.LinearVelocity = _characterRigidbody.linearVelocity;
+        }
+        
+        #region Actions
+        
         public void Move(InputAction.CallbackContext value)
         {
-            var vector = value.ReadValue<Vector2>();
-            _lastMoveInput = new Vector3(vector.x, 0, vector.y) * _moveSpeed;
+            _moveInput = value.ReadValue<Vector2>();
             
             if(_characterRuntimeData.LogMoveInput)
-                Debug.LogError(vector);
+                Debug.LogError(_moveInput);
         }
 
-        public void Look(InputAction.CallbackContext value)
+        public void Rotate(InputAction.CallbackContext value)
         {            
-            _currentLookInput = value.ReadValue<Vector2>();
+            _rotationInput = value.ReadValue<Vector2>();
             
             if(_characterRuntimeData.LogLookInput)
-                Debug.LogError(_currentLookInput);
+                Debug.LogError(_rotationInput);
         }
 
         public void Jump()
         {
             if (IsOnGround())
             {
-                _object.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
-                _onJump.Invoke();
+                _characterRigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
             }
         }
-
-        private void Update()
-        {
-            _lastMoveInput.y = _object.linearVelocity.y;
-            var moveDirection = _orientation.forward * _lastMoveInput.z + _orientation.right * _lastMoveInput.x;
-            moveDirection.y = _lastMoveInput.y;
-            
-            _object.linearVelocity = Vector3.Lerp(_object.linearVelocity, moveDirection, Time.deltaTime * 100f);
-            _object.transform.Rotate(Vector3.up, _currentLookInput.x * _lookSpeed * Time.deltaTime);
-            
-            // Debug purposes
-            _characterRuntimeData.LinearVelocity = _object.linearVelocity;
-        }
         
+        #endregion
+
+        #region Utilities
+
         private bool IsOnGround()
         {
-            return Physics.Raycast(_object.position, Vector3.down, out var hit, 1.1f);
+            return Physics.Raycast(_characterRigidbody.position, Vector3.down, out var hit, 1.1f);
         }
+
+        #endregion
     }
 }
