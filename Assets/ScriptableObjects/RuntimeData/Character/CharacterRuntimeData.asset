@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3921c4dbf7a2d4677aec8112902b86ac, type: 3}
   m_Name: CharacterRuntimeData
   m_EditorClassIdentifier: 
-  LinearVelocity: {x: 0, y: -0.00000013138197, z: 3.7762708e-22}
+  Health: 100
+  LinearVelocity: {x: 4.0330366e-33, y: 0, z: 2.3457335e-33}
   AngularVelocity: {x: 0, y: 0, z: 0}
-  LogMoveInput: 0
-  LogLookInput: 0
+  <LogMoveInput>k__BackingField: 0
+  <LogLookInput>k__BackingField: 0
+  <UseExponentialDecay>k__BackingField: 1
