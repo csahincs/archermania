@@ -13,6 +13,7 @@ namespace CameraController
         [Header("Data")] 
         [SerializeField] private Vector3 _damping;
         [SerializeField] private Vector3 _offset;
+        [SerializeField, Range(0, 10f)] private float _distance;
         
         private void Update()
         {
@@ -26,9 +27,8 @@ namespace CameraController
         private void UpdatePosition()
         {
             var cameraPosition = _camera.transform.position;
-            var cameraTargetPosition = _target.position + _offset;
 
-            var lerpValue = ExponentialDecay.Evaluate(cameraPosition, cameraTargetPosition, 
+            var lerpValue = ExponentialDecay.Evaluate(cameraPosition, CalculatePosition(), 
                 _damping, Time.deltaTime);
             
             _camera.transform.position = lerpValue;
@@ -38,8 +38,13 @@ namespace CameraController
         [MethodInspectorButton]
         private void SetPosition()
         {
-            _camera.transform.position = _target.position + _offset;
+            _camera.transform.position = CalculatePosition();
             _camera.transform.rotation = Quaternion.LookRotation(_target.forward);
+        }
+
+        private Vector3 CalculatePosition()
+        {
+            return _target.transform.position - _target.forward.normalized * _distance + _offset;
         }
     }
 }
