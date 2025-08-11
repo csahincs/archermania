@@ -1,7 +1,6 @@
 using Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 using Utility.Lerp;
 
 namespace Character
@@ -26,6 +25,10 @@ namespace Character
         private Vector2 _moveInput;
         private Vector2 _rotationInput;
 
+        private bool _jumpInCooldown;
+        private float _jumpCooldown;
+        private float _jumpTimer;
+        
         private void Update()
         {
             _orientation.Rotate(Vector3.up, _rotationInput.x);
@@ -38,22 +41,26 @@ namespace Character
             
             if (!_moveInput.Equals(Vector2.zero))
             {
-                var rotationLerpValue = ExponentialDecay.Evaluate(transform.forward, _orientation.forward, 
+                var rotationLerpValue = ExponentialDecay.Evaluate(_object.forward, _orientation.forward, 
                     _rotationDecay, Time.deltaTime * _rotationSpeed);
 
                 _object.forward = rotationLerpValue;
+            }
+
+            if (_jumpInCooldown)
+            {
+                _jumpTimer += Time.deltaTime;
+            }
+
+            if (_jumpTimer >= _jumpCooldown)
+            {
+                _jumpInCooldown = false;
             }
             
             // Debug purposes
             _characterRuntimeData.LinearVelocity = _rigidbody.linearVelocity;
         }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(_orientation.position, _orientation.forward * 5f);
-        }
-
+        
         #region Actions
         
         public void Move(InputAction.CallbackContext value)
@@ -74,9 +81,10 @@ namespace Character
 
         public void Jump()
         {
-            if (IsOnGround())
+            if (!_jumpInCooldown && IsOnGround())
             {
                 _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+                _jumpInCooldown = true;
             }
         }
         
@@ -87,6 +95,12 @@ namespace Character
         private bool IsOnGround()
         {
             return Physics.Raycast(_rigidbody.position, Vector3.down, out var hit, 1.1f);
+        }
+        
+        private void OnDrawGizmos()
+        {
+            Debug.DrawRay(_orientation.position, _orientation.forward * 5f, Color.red);
+            Debug.DrawRay(_object.position - Vector3.down / 2f, _object.forward * 5f, Color.blue);
         }
 
         #endregion
