@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3921c4dbf7a2d4677aec8112902b86ac, type: 3}
-  m_Name: CharacterRuntimeData
+  m_Name: CharacterRuntimeDebugData
   m_EditorClassIdentifier: 
   Health: 100
-  LinearVelocity: {x: 4.0330366e-33, y: 0, z: 2.3457335e-33}
+  LinearVelocity: {x: 0, y: 0, z: 0}
   AngularVelocity: {x: 0, y: 0, z: 0}
   <LogMoveInput>k__BackingField: 0
   <LogLookInput>k__BackingField: 0

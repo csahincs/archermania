@@ -1,5 +1,6 @@
 using Data;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Character
 {
@@ -15,12 +16,13 @@ namespace Character
             set
             {
                 _currentHealth = value;
-                _characterRuntimeData.Health = _currentHealth;
+                _characterRuntimeDebugData.Health = _currentHealth;
             }
         }
     
+        [FormerlySerializedAs("_characterRuntimeData")]
         [Space, Header("Runtime Data")]
-        [SerializeField] private CharacterRuntimeData _characterRuntimeData;
+        [SerializeField] private CharacterRuntimeDebugData _characterRuntimeDebugData;
 
         private float _currentHealth;
         

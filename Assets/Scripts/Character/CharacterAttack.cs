@@ -1,4 +1,3 @@
-using System;
 using Projectile;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,6 +7,7 @@ namespace Character
 {
     public class CharacterAttack : MonoBehaviour
     {
+        [SerializeField] private Transform _characterObject;
         [SerializeField] private Arrow _projectilePrefab;
         
         [Space, Header("Events")]
@@ -26,9 +26,9 @@ namespace Character
                     _isCharging = true;
                     break;
                 case InputActionPhase.Canceled:
-                    var spawnPosition = transform.position + transform.forward.normalized;
+                    var spawnPosition = _characterObject.position + _characterObject.forward.normalized + Vector3.up / 2f;
                     var projectile = Instantiate(_projectilePrefab, spawnPosition, Quaternion.Euler(transform.forward));
-                    projectile.Initialize(transform.forward, _chargeDuration);
+                    projectile.Initialize(_characterObject.forward, _chargeDuration);
                     _isCharging = false;
                     _onAttack.Invoke();
                     break;

@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace Data
 {
-    [CreateAssetMenu(fileName = nameof(CharacterRuntimeData), menuName = "Data/RuntimeData/" + nameof(CharacterRuntimeData))]
-    public class CharacterRuntimeData : ScriptableObject
+    [CreateAssetMenu(fileName = nameof(CharacterRuntimeDebugData), menuName = "Data/RuntimeData/" + nameof(CharacterRuntimeDebugData))]
+    public class CharacterRuntimeDebugData : ScriptableObject
     {
         [Header("Health Data")] 
         [SerializeField, ReadOnly] public float Health;

@@ -1,6 +1,7 @@
 using Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using Utility.Lerp;
 
 namespace Character
@@ -14,19 +15,21 @@ namespace Character
         
         [Space, Header("Edit Data")]
         [SerializeField] private float _jumpForce;
+        [SerializeField] private float _groundCheckDistance;
         [SerializeField] private float _moveSpeed;
         [SerializeField] private float _moveDecay;
         [SerializeField] private float _rotationSpeed;
         [SerializeField] private float _rotationDecay;
         
+        [FormerlySerializedAs("_characterRuntimeData")]
         [Space, Header("Runtime Data")]
-        [SerializeField] private CharacterRuntimeData _characterRuntimeData;
+        [SerializeField] private CharacterRuntimeDebugData _characterRuntimeDebugData;
 
         private Vector2 _moveInput;
         private Vector2 _rotationInput;
 
         private bool _jumpInCooldown;
-        private float _jumpCooldown;
+        private readonly float _jumpCooldown = .2f;
         private float _jumpTimer;
         
         private void Update()
@@ -58,7 +61,7 @@ namespace Character
             }
             
             // Debug purposes
-            _characterRuntimeData.LinearVelocity = _rigidbody.linearVelocity;
+            _characterRuntimeDebugData.LinearVelocity = _rigidbody.linearVelocity;
         }
         
         #region Actions
@@ -67,7 +70,7 @@ namespace Character
         {
             _moveInput = value.ReadValue<Vector2>();
             
-            if(_characterRuntimeData.LogMoveInput)
+            if(_characterRuntimeDebugData.LogMoveInput)
                 Debug.LogError(_moveInput);
         }
 
@@ -75,7 +78,7 @@ namespace Character
         {            
             _rotationInput = value.ReadValue<Vector2>();
             
-            if(_characterRuntimeData.LogLookInput)
+            if(_characterRuntimeDebugData.LogLookInput)
                 Debug.LogError(_rotationInput);
         }
 
@@ -84,6 +87,7 @@ namespace Character
             if (!_jumpInCooldown && IsOnGround())
             {
                 _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+                _jumpTimer = 0f;
                 _jumpInCooldown = true;
             }
         }
@@ -94,13 +98,14 @@ namespace Character
 
         private bool IsOnGround()
         {
-            return Physics.Raycast(_rigidbody.position, Vector3.down, out var hit, 1.1f);
+            return Physics.Raycast(_rigidbody.position, Vector3.down, out var hit, _groundCheckDistance);
         }
         
         private void OnDrawGizmos()
         {
             Debug.DrawRay(_orientation.position, _orientation.forward * 5f, Color.red);
             Debug.DrawRay(_object.position - Vector3.down / 2f, _object.forward * 5f, Color.blue);
+            Debug.DrawRay(_rigidbody.position, Vector3.down * _groundCheckDistance, Color.black);
         }
 
         #endregion
