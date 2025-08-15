@@ -18,7 +18,6 @@ namespace Character
         
         public void Attack(InputAction.CallbackContext context)
         {
-            Debug.LogError(context.phase);
             switch (context.phase)
             {
                 case InputActionPhase.Started:

@@ -51,15 +51,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 7787328731702681866}
+  _capsuleCollider: {fileID: 7639146160963041453}
   _object: {fileID: 6139140490695440085}
   _orientation: {fileID: 1622815251447614741}
-  _jumpForce: 2.5
-  _groundCheckDistance: 0.51
-  _moveSpeed: 5
-  _moveDecay: 4
-  _rotationSpeed: 20
-  _rotationDecay: 4
-  _characterRuntimeDebugData: {fileID: 11400000, guid: 392beaf2b9b484ddebc6b20355886100, type: 2}
+  _runtimeData: {fileID: 11400000, guid: 97cd5cd3e32e94043a91839f4add0c71, type: 2}
+  _debugData: {fileID: 11400000, guid: 392beaf2b9b484ddebc6b20355886100, type: 2}
 --- !u!114 &5373924837704161965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,7 +159,7 @@ MonoBehaviour:
       - m_Target: {fileID: 5789896069427992315}
         m_TargetAssemblyTypeName: Character.CharacterMovement, Assembly-CSharp
         m_MethodName: Jump
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
