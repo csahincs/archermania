@@ -1,9 +1,10 @@
 using Character;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Projectile
 {
-    public class Arrow : MonoBehaviour
+    public class Arrow : MonoBehaviour, IHittable
     {
         //[SerializeField] private
         [Header("Components")]
@@ -14,13 +15,14 @@ namespace Projectile
         [SerializeField] private float _damage;
         [SerializeField] private float _maxChargeDuration;
 
-        public void Initialize(Vector3 direction, float chargeDuration)
+        [Space, Header("Events")]
+        [SerializeField] private UnityEvent _onHitAction;
+        
+        public void OnHit(GameObject hitGo)
         {
-            chargeDuration = Mathf.Clamp(chargeDuration, 0, _maxChargeDuration);
-            
-            var speed = _maxSpeed * (chargeDuration / _maxChargeDuration);
-            _rigidbody.AddForce(speed * direction, ForceMode.Impulse);
+            _onHitAction?.Invoke();
         }
+        
         
         private void OnCollisionEnter(Collision other)
         {

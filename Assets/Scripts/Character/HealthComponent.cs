@@ -1,6 +1,6 @@
+using CSToolbox.Runtime.Attributes;
 using Data;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Character
 {
@@ -9,7 +9,6 @@ namespace Character
         [Header("Edit Data")]
         [SerializeField] private float _maxHealth;
 
-        [field: SerializeField]
         private float CurrentHealth
         {
             get => _currentHealth;
@@ -20,11 +19,10 @@ namespace Character
             }
         }
     
-        [FormerlySerializedAs("_characterRuntimeData")]
         [Space, Header("Runtime Data")]
         [SerializeField] private CharacterRuntimeDebugData _characterRuntimeDebugData;
 
-        private float _currentHealth;
+        [SerializeField, ReadOnly] private float _currentHealth;
         
         private void OnEnable()
         {

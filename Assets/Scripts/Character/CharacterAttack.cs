@@ -7,8 +7,12 @@ namespace Character
 {
     public class CharacterAttack : MonoBehaviour
     {
+        [Header("Component References")]
         [SerializeField] private Transform _characterObject;
-        [SerializeField] private Arrow _projectilePrefab;
+        [SerializeField] private Rigidbody _projectilePrefab;
+        
+        [Space, Header("Data")]
+        [SerializeField] private float _projectileSpeed;
         
         [Space, Header("Events")]
         [SerializeField] private UnityEvent _onAttack;
@@ -20,25 +24,12 @@ namespace Character
         {
             switch (context.phase)
             {
-                case InputActionPhase.Started:
-                    _chargeDuration = 0f;
-                    _isCharging = true;
-                    break;
                 case InputActionPhase.Canceled:
                     var spawnPosition = _characterObject.position + _characterObject.forward.normalized + Vector3.up / 2f;
                     var projectile = Instantiate(_projectilePrefab, spawnPosition, Quaternion.Euler(transform.forward));
-                    projectile.Initialize(_characterObject.forward, _chargeDuration);
-                    _isCharging = false;
+                    projectile.AddForce(_projectileSpeed * projectile.transform.forward, ForceMode.Impulse);
                     _onAttack.Invoke();
                     break;
-            }
-        }
-
-        private void Update()
-        {
-            if (_isCharging)
-            {
-                _chargeDuration += Time.deltaTime;
             }
         }
     }
