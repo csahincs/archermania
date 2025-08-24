@@ -9,7 +9,7 @@ namespace Character
     {
         [Header("Component References")]
         [SerializeField] private Transform _characterObject;
-        [SerializeField] private Rigidbody _projectilePrefab;
+        [SerializeField] private ArrowPoolSystem _arrowPool;
         
         [Space, Header("Data")]
         [SerializeField] private float _projectileSpeed;
@@ -26,8 +26,10 @@ namespace Character
             {
                 case InputActionPhase.Canceled:
                     var spawnPosition = _characterObject.position + _characterObject.forward.normalized + Vector3.up / 2f;
-                    var projectile = Instantiate(_projectilePrefab, spawnPosition, Quaternion.Euler(transform.forward));
-                    projectile.AddForce(_projectileSpeed * projectile.transform.forward, ForceMode.Impulse);
+                    var arrow = _arrowPool.Pool.Get().GetComponent<Rigidbody>();
+                    arrow.transform.position = spawnPosition;
+                    arrow.transform.forward = _characterObject.forward;
+                    arrow.AddForce(_projectileSpeed * arrow.transform.forward, ForceMode.Impulse);
                     _onAttack.Invoke();
                     break;
             }

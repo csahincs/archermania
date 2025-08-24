@@ -29,12 +29,16 @@ namespace Character
         private void Update()
         {
             _orientation.Rotate(Vector3.up, _rotationInput.x);
+
+            if (IsOnGround())
+            {
+                var moveDirection = (_orientation.forward * _moveInput.y + _orientation.right * _moveInput.x).normalized;
+                var velocityLerpValue = ExponentialDecay.Evaluate(_rigidbody.linearVelocity, moveDirection * _runtimeData.MoveSpeed, 
+                    _runtimeData.MoveDecay, Time.deltaTime);
+                velocityLerpValue.y = _rigidbody.linearVelocity.y;
             
-            var moveDirection = (_orientation.forward * _moveInput.y + _orientation.right * _moveInput.x).normalized;
-            var velocityLerpValue = ExponentialDecay.Evaluate(_rigidbody.linearVelocity, moveDirection * _runtimeData.MoveSpeed, 
-                _runtimeData.MoveDecay, Time.deltaTime);
-            velocityLerpValue.y = _rigidbody.linearVelocity.y;
-            _rigidbody.linearVelocity = velocityLerpValue;
+                _rigidbody.linearVelocity = velocityLerpValue;
+            }
             
             if (!_moveInput.Equals(Vector2.zero))
             {
